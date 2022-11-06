@@ -1,15 +1,15 @@
-import { Project } from './Project';
-const baseUrl = 'http://localhost:4000';
+import { Project } from "./Project";
+const baseUrl = "http://localhost:4000";
 const url = `${baseUrl}/projects`;
 
 function translateStatusToErrorMessage(status: number) {
   switch (status) {
     case 401:
-      return 'Please login again.';
+      return "Please login again.";
     case 403:
-      return 'You do not have permission to view the project(s).';
+      return "You do not have permission to view the project(s).";
     default:
-      return 'There was an error retrieving the project(s). Please try again.';
+      return "There was an error retrieving the project(s). Please try again.";
   }
 }
 
@@ -57,9 +57,26 @@ const projectAPI = {
       .then(parseJSON)
       .then(convertToProjectModels)
       .catch((error: TypeError) => {
-        console.log('log client error ' + error);
+        console.log("log client error " + error);
         throw new Error(
-          'There was an error retrieving the projects. Please try again.'
+          "There was an error retrieving the projects. Please try again."
+        );
+      });
+  },
+  put(project: Project) {
+    return fetch(`${url}/${project.id}`, {
+      method: "PUT",
+      body: JSON.stringify(project),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(checkStatus)
+      .then(parseJSON)
+      .catch((error: TypeError) => {
+        console.log("log client error " + error);
+        throw new Error(
+          "There was an error updating the project. Please try again."
         );
       });
   },
